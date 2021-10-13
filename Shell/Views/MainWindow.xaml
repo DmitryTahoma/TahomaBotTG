@@ -32,6 +32,7 @@
             Grid.Column="0"
             Grid.ColumnSpan="2"
             Margin="5,5,10,0"
+            Block.LineHeight="1"
             Document="{Binding TextDocument}"
             IsReadOnly="True" />
 
@@ -44,7 +45,10 @@
                 Margin="0,0,10,10"
                 Content="Доступные функции:"
                 FontSize="18" />
-            <StackPanel Name="EnabledFunctionsStackPanel" Orientation="Vertical" />
+            <StackPanel
+                Name="EnabledFunctionsStackPanel"
+                Margin="10, 0, 10, 10"
+                Orientation="Vertical" />
 
         </StackPanel>
 
