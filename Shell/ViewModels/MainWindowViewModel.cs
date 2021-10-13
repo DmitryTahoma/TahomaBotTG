@@ -1,5 +1,7 @@
-﻿using Catel.MVVM;
-using System.Threading.Tasks;
+﻿using Catel.Data;
+using Catel.MVVM;
+using System.Windows.Controls;
+using System.Windows.Documents;
 
 namespace Shell.ViewModels
 {
@@ -7,26 +9,51 @@ namespace Shell.ViewModels
     {
         public MainWindowViewModel()
         {
+            AddEnabledBotFunctions = new Command<StackPanel>(OnAddEnabledBotFunctionsExecute);
+            SendMessage = new Command<string>(OnSendMessageExecute);
+            StartBot = new Command<Grid>(OnStartBotExecute);
+            StopBot = new Command<Grid>(OnStopBotExecute);
+
+            TextDocument = new FlowDocument();
         }
 
-        public override string Title { get { return "Welcome to Shell"; } }
+        public override string Title => "TahomaBot";
 
-        // TODO: Register models with the vmpropmodel codesnippet
-        // TODO: Register view model properties with the vmprop or vmpropviewmodeltomodel codesnippets
-        // TODO: Register commands with the vmcommand or vmcommandwithcanexecute codesnippets
-
-        protected override async Task InitializeAsync()
+        public FlowDocument TextDocument
         {
-            await base.InitializeAsync();
-
-            // TODO: subscribe to events here
+            get => GetValue<FlowDocument>(TextDocumentProperty);
+            set => SetValue(TextDocumentProperty, value);
         }
+        public static readonly PropertyData TextDocumentProperty = RegisterProperty(nameof(TextDocument), typeof(FlowDocument), null);
 
-        protected override async Task CloseAsync()
+        public bool IsEnabledStartBotButton
         {
-            // TODO: unsubscribe from events here
-
-            await base.CloseAsync();
+            get => GetValue<bool>(IsEnabledStartBotButtonProperty);
+            set => SetValue(IsEnabledStartBotButtonProperty, value);
         }
+        public static readonly PropertyData IsEnabledStartBotButtonProperty = RegisterProperty(nameof(IsEnabledStartBotButton), typeof(bool), true);
+
+        public bool IsEnabledStopBotButton
+        {
+            get => GetValue<bool>(IsEnabledStopBotButtonProperty);
+            set => SetValue(IsEnabledStopBotButtonProperty, value);
+        }
+        public static readonly PropertyData IsEnabledStopBotButtonProperty = RegisterProperty(nameof(IsEnabledStopBotButton), typeof(bool), false);
+
+        public Command<StackPanel> AddEnabledBotFunctions { get; private set; }
+        private void OnAddEnabledBotFunctionsExecute(StackPanel _stackPanel)
+        { }
+
+        public Command<string> SendMessage { get; private set; }
+        private void OnSendMessageExecute(string _message)
+        { }
+
+        public Command<Grid> StartBot { get; private set; }
+        private void OnStartBotExecute(Grid _statusGrid)
+        { }
+
+        public Command<Grid> StopBot { get; private set; }
+        private void OnStopBotExecute(Grid _statusGrid)
+        { }
     }
 }
