@@ -27,7 +27,8 @@ namespace Shell.Models
 
             botFunctions = new List<IBotFunction>
             {
-                new AutoLayoutTranslation()
+                new AutoLayoutTranslation(),
+                new GenerateButtonsForDmitryTahoma()
             };
         }
 

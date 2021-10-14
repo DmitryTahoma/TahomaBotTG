@@ -6,18 +6,11 @@ using Telegram.Bot.Types.Enums;
 namespace Shell.Models.BotFunctions
 {
     [System.Obsolete]
-    internal class AutoLayoutTranslation : IBotFunction
+    internal class AutoLayoutTranslation : BaseBotFunction
     {
-        private bool isActive;
+        public override string Name => "автоматический перевод английской расскладки на русскую";
 
-        public AutoLayoutTranslation()
-        {
-            isActive = true;
-        }
-
-        public string Name => "автоматический перевод английской расскладки на русскую";
-
-        public ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
+        public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
             if(isActive && IsNeedToTranslate(_message.Text))
             {
@@ -36,11 +29,6 @@ namespace Shell.Models.BotFunctions
             }
 
             return ActionEndStatus.Success;
-        }
-
-        public void SetActiveStatus(bool _isActive)
-        {
-            isActive = _isActive;
         }
 
         private bool IsNeedToTranslate(string _text)
