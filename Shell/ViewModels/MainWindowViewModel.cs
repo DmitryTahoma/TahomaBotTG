@@ -4,8 +4,12 @@ using Shell.Models;
 using Shell.Models.BotFunctions;
 using Shell.ViewModels.UIAddiction;
 using System;
+using System.Drawing;
+using System.IO;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Forms;
 
 namespace Shell.ViewModels
 {
@@ -15,18 +19,39 @@ namespace Shell.ViewModels
         private MainWindowModel model;
         private FlowDocumentFormatter documentFormatter;
         private ControlBuilder controlBuilder;
+        private NotifyIcon notifyIcon;
 
         public MainWindowViewModel()
         {
             model = new MainWindowModel();
             controlBuilder = new ControlBuilder();
 
+            InitializeNotifyIcon();
+            InitializeCommands();
+
+            TextDocument = new FlowDocument();
+        }
+
+        private void InitializeNotifyIcon()
+        {
+            Stream iconStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources\\Icons\\logo.ico")).Stream;
+            Icon icon = new Icon(iconStream);
+            notifyIcon = new NotifyIcon()
+            {
+                Icon = icon,
+                Text = Title
+            };
+            notifyIcon.Click += OnNotifyIconClick;
+        }
+
+        private void InitializeCommands()
+        {
             AddEnabledBotFunctions = new Command<StackPanel>(OnAddEnabledBotFunctionsExecute);
             SendMessage = new Command<string>(OnSendMessageExecute);
             StartBot = new Command<Grid>(OnStartBotExecute);
             StopBot = new Command<Grid>(OnStopBotExecute);
-
-            TextDocument = new FlowDocument();
+            DisposeViewModel = new Command(OnDisposeViewModelExecute);
+            HideToBackground = new Command(OnHideToBackgroundExecute);
         }
 
         public override string Title => "TahomaBot";
@@ -51,6 +76,13 @@ namespace Shell.ViewModels
             set => SetValue(IsEnabledStopBotButtonProperty, value);
         }
         public static readonly PropertyData IsEnabledStopBotButtonProperty = RegisterProperty(nameof(IsEnabledStopBotButton), typeof(bool), false);
+
+        public Visibility WindowVisibility
+        {
+            get => GetValue<Visibility>(WindowVisibilityProperty);
+            set => SetValue(WindowVisibilityProperty, value);
+        }
+        public static readonly PropertyData WindowVisibilityProperty = RegisterProperty(nameof(WindowVisibility), typeof(Visibility), Visibility.Visible);
 
         public Command<StackPanel> AddEnabledBotFunctions { get; private set; }
         private void OnAddEnabledBotFunctionsExecute(StackPanel _stackPanel)
@@ -99,6 +131,25 @@ namespace Shell.ViewModels
                     IsEnabledStartBotButton = true;
                 }
             });
+        }
+
+        public Command DisposeViewModel { get; private set; }
+        private void OnDisposeViewModelExecute()
+        {
+            notifyIcon?.Dispose();
+        }
+
+        public Command HideToBackground { get; private set; }
+        private void OnHideToBackgroundExecute()
+        {
+            WindowVisibility = Visibility.Hidden;
+            notifyIcon.Visible = true;
+        }
+
+        private void OnNotifyIconClick(object sender, EventArgs e)
+        {
+            WindowVisibility = Visibility.Visible;
+            notifyIcon.Visible = false;
         }
     }
 }

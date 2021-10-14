@@ -8,7 +8,8 @@
     xmlns:vm="clr-namespace:Shell.ViewModels"
     Width="800"
     Height="550"
-    ResizeMode="CanResize">
+    ResizeMode="CanResize"
+    Visibility="{Binding WindowVisibility, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
 
     <Window.DataContext>
         <vm:MainWindowViewModel />
@@ -26,6 +27,19 @@
             <ColumnDefinition Width="auto" />
             <ColumnDefinition Width="auto" />
         </Grid.ColumnDefinitions>
+
+        <Menu
+            Grid.Row="0"
+            Grid.Column="0"
+            Grid.ColumnSpan="3">
+            <MenuItem FontSize="15" Header="Работать в фоне">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Click">
+                        <i:InvokeCommandAction Command="{Binding HideToBackground}" />
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </MenuItem>
+        </Menu>
 
         <controls:BindableRichTextBox
             Grid.Row="1"
@@ -47,7 +61,7 @@
                 FontSize="18" />
             <StackPanel
                 Name="EnabledFunctionsStackPanel"
-                Margin="10, 0, 10, 10"
+                Margin="10,0,10,10"
                 Orientation="Vertical" />
 
         </StackPanel>
@@ -122,6 +136,9 @@
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="Loaded">
             <i:InvokeCommandAction Command="{Binding AddEnabledBotFunctions}" CommandParameter="{Binding ElementName=EnabledFunctionsStackPanel}" />
+        </i:EventTrigger>
+        <i:EventTrigger EventName="Closed">
+            <i:InvokeCommandAction Command="{Binding DisposeViewModel}" />
         </i:EventTrigger>
     </i:Interaction.Triggers>
 </catel:Window>
