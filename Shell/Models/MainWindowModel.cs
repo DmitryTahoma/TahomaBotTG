@@ -1,4 +1,5 @@
 ﻿using Shell.Models.BotFunctions;
+using Shell.Models.BotFunctions.DmitryTahomaFunctions;
 using System;
 using System.Collections.Generic;
 using Telegram.Bot;
@@ -28,7 +29,8 @@ namespace Shell.Models
             botFunctions = new List<IBotFunction>
             {
                 new AutoLayoutTranslation(),
-                new GenerateButtonsForDmitryTahoma()
+                new GenerateButtonsForDmitryTahoma(),
+                new ShutdownPC()
             };
         }
 
