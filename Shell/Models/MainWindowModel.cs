@@ -30,7 +30,8 @@ namespace Shell.Models
             {
                 new AutoLayoutTranslation(),
                 new GenerateButtonsForDmitryTahoma(),
-                new ShutdownPC()
+                new ShutdownPC(),
+                new GettingScreen()
             };
         }
 

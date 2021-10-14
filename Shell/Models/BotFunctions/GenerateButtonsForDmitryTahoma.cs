@@ -13,9 +13,9 @@ namespace Shell.Models.BotFunctions
 
         public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
-            if(_message.From.Username == "DmitryTahoma")
+            try
             {
-                try
+                if(isActive && _message.From.Username == "DmitryTahoma")
                 {
                     _client.SendTextMessageAsync(_message.Chat.Id, "Спец.возможности для DmitryTahoma", replyMarkup: new ReplyKeyboardMarkup
                     {
@@ -25,10 +25,10 @@ namespace Shell.Models.BotFunctions
                         }
                     });
                 }
-                catch
-                {
-                    return ActionEndStatus.UnknownFail;
-                }
+            }
+            catch
+            {
+                return ActionEndStatus.UnknownFail;
             }
 
             return ActionEndStatus.Success;

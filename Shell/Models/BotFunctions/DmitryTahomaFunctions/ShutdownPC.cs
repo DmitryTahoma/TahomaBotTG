@@ -14,7 +14,7 @@ namespace Shell.Models.BotFunctions.DmitryTahomaFunctions
         {
             try
             {
-                if (_message.From.Username == "DmitryTahoma" && _message.Text != null && _message.Text == "/Выключить ПК")
+                if (isActive && _message.From.Username == "DmitryTahoma" && _message.Text != null && _message.Text == "/Выключить ПК")
                 {
                     _client.SendTextMessageAsync(_message.Chat.Id, "Ок, выключаю через 30 сек!");
                     Process.Start("shutdown", "-s -t 30");
