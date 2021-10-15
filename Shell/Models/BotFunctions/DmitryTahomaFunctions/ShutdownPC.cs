@@ -8,13 +8,13 @@ namespace Shell.Models.BotFunctions.DmitryTahomaFunctions
     [Obsolete]
     internal class ShutdownPC : BaseBotFunction
     {
-        public override string Name => "выключение ПК для DmitryTahoma";
+        public override string Name => "выключение ПК";
 
         public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
             try
             {
-                if (isActive && _message.From.Username == "DmitryTahoma" && _message.Text != null && _message.Text == "/Выключить ПК")
+                if (isActive && _message.Text != null && _message.Text == "/Выключить ПК")
                 {
                     _client.SendTextMessageAsync(_message.Chat.Id, "Ок, выключаю через 30 сек!");
                     Process.Start("shutdown", "-s -t 30");

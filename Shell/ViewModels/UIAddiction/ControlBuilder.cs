@@ -1,5 +1,6 @@
 ﻿using Shell.Models.BotFunctions;
 using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
@@ -8,9 +9,16 @@ namespace Shell.ViewModels.UIAddiction
     [Obsolete]
     internal class ControlBuilder
     {
-        public CheckBox GetBotFunctionCheckBox(IBotFunction _botFunction)
+        public IEnumerable<CheckBox> GetBotFunctionCheckBox(IBotFunction _botFunction, double leftMargin = 0)
         {
-            CheckBox checkBox = new CheckBox() { Content = _botFunction.Name, DataContext = _botFunction };
+            List<CheckBox> result = new List<CheckBox>();
+
+            CheckBox checkBox = new CheckBox() 
+            {
+                Content = _botFunction.Name,
+                DataContext = _botFunction,
+                Margin = new Thickness(leftMargin, 0, 0, 0)
+            };
 
             RoutedEventHandler action = (s, e) =>
             {
@@ -20,7 +28,17 @@ namespace Shell.ViewModels.UIAddiction
             checkBox.Checked += action;
             action(null, null);
 
-            return checkBox;
+            result.Add(checkBox);
+
+            if(_botFunction is IBotFunctionList functionList)
+            {
+                foreach(IBotFunction innerBotFunction in functionList.InnerFunctions)
+                {
+                    result.AddRange(GetBotFunctionCheckBox(innerBotFunction, leftMargin + 20));
+                }
+            }
+
+            return result;
         }
     }
 }

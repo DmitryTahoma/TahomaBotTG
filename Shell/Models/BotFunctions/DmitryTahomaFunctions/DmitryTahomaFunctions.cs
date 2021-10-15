@@ -4,19 +4,32 @@ using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Shell.Models.BotFunctions
+namespace Shell.Models.BotFunctions.DmitryTahomaFunctions
 {
     [Obsolete]
-    internal class GenerateButtonsForDmitryTahoma : BaseBotFunction
+    internal class DmitryTahomaFunctions : BaseBotFunctionList
     {
-        public override string Name => "генерация кнопок для DmitryTahoma";
+        public DmitryTahomaFunctions() : base(new ShutdownPC(), new GettingScreen()) { }
+
+        public override string Name => "спец.возможности для DmitryTahoma";
 
         public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
+            ActionEndStatus fStatus = ActionEndStatus.Success;
+
             try
             {
-                if(isActive && _message.From.Username == "DmitryTahoma")
+                if (isActive && _message.From.Username == "DmitryTahoma")
                 {
+                    foreach(IBotFunction botFunction in innerFunctions)
+                    {
+                        if(botFunction.Execute(_client, _message, _addingText) != ActionEndStatus.Success)
+                        {
+                            fStatus = ActionEndStatus.InnerFunctionFail;
+                            _addingText?.Invoke("!!!InnerFunctionFail!!! во время " + Name);
+                        }
+                    }
+
                     _client.SendTextMessageAsync(_message.Chat.Id, "Спец.возможности для DmitryTahoma", replyMarkup: new ReplyKeyboardMarkup
                     {
                         Keyboard = new List<List<KeyboardButton>>
@@ -31,7 +44,7 @@ namespace Shell.Models.BotFunctions
                 return ActionEndStatus.UnknownFail;
             }
 
-            return ActionEndStatus.Success;
+            return fStatus;
         }
     }
 }

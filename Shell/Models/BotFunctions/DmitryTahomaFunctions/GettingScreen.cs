@@ -11,13 +11,13 @@ namespace Shell.Models.BotFunctions.DmitryTahomaFunctions
     [Obsolete]
     internal class GettingScreen : BaseBotFunction
     {
-        public override string Name => "получить скрин для DmitryTahoma";
+        public override string Name => "получить скрин";
 
         public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
             try
             {
-                if (isActive && _message.From.Username == "DmitryTahoma" && _message.Text != null && _message.Text == "/Получить скрин")
+                if (isActive && _message.Text != null && _message.Text == "/Получить скрин")
                 {
                     Bitmap printscreen = new Bitmap(System.Windows.Forms.Screen.PrimaryScreen.Bounds.Width, System.Windows.Forms.Screen.PrimaryScreen.Bounds.Height);
                     Graphics graphics = Graphics.FromImage(printscreen);

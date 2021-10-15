@@ -4,5 +4,6 @@
     {
         UnknownFail = -1,
         Success = 0,
+        InnerFunctionFail = 1,
     }
 }

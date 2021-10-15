@@ -4,6 +4,7 @@ using Shell.Models;
 using Shell.Models.BotFunctions;
 using Shell.ViewModels.UIAddiction;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows;
@@ -93,7 +94,12 @@ namespace Shell.ViewModels
 
             foreach (IBotFunction botFunction in model.BotFunctions)
             {
-                _stackPanel.Children.Add(controlBuilder.GetBotFunctionCheckBox(botFunction));
+                IEnumerable<System.Windows.Controls.CheckBox> checkBoxes = controlBuilder.GetBotFunctionCheckBox(botFunction);
+
+                foreach(System.Windows.Controls.CheckBox checkBox in checkBoxes)
+                {
+                    _stackPanel.Children.Add(checkBox);
+                }
             }
         }
 
