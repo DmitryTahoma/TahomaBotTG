@@ -13,35 +13,28 @@ namespace Shell.Models.BotFunctions.DmitryTahomaFunctions
 
         public override string Name => "спец.возможности для DmitryTahoma";
 
-        public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
+        protected override ActionEndStatus FunctionActionExecute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
             ActionEndStatus fStatus = ActionEndStatus.Success;
 
-            try
+            if (_message.From.Username == "DmitryTahoma")
             {
-                if (isActive && _message.From.Username == "DmitryTahoma")
+                foreach (IBotFunction botFunction in innerFunctions)
                 {
-                    foreach(IBotFunction botFunction in innerFunctions)
+                    if (botFunction.Execute(_client, _message, _addingText) != ActionEndStatus.Success)
                     {
-                        if(botFunction.Execute(_client, _message, _addingText) != ActionEndStatus.Success)
-                        {
-                            fStatus = ActionEndStatus.InnerFunctionFail;
-                            _addingText?.Invoke("!!!InnerFunctionFail!!! во время " + Name);
-                        }
+                        fStatus = ActionEndStatus.InnerFunctionFail;
+                        _addingText?.Invoke("!!!InnerFunctionFail!!! во время " + Name);
                     }
+                }
 
-                    _client.SendTextMessageAsync(_message.Chat.Id, "Спец.возможности для DmitryTahoma", replyMarkup: new ReplyKeyboardMarkup
-                    {
-                        Keyboard = new List<List<KeyboardButton>>
+                _client.SendTextMessageAsync(_message.Chat.Id, "Спец.возможности для DmitryTahoma", replyMarkup: new ReplyKeyboardMarkup
+                {
+                    Keyboard = new List<List<KeyboardButton>>
                         {
                             new List<KeyboardButton>{ new KeyboardButton { Text = "/Выключить ПК" }, new KeyboardButton { Text = "/Получить скрин" } }
                         }
-                    });
-                }
-            }
-            catch
-            {
-                return ActionEndStatus.UnknownFail;
+                });
             }
 
             return fStatus;

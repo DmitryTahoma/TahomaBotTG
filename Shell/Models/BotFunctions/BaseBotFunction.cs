@@ -16,7 +16,26 @@ namespace Shell.Models.BotFunctions
 
         public abstract string Name { get; }
 
-        public abstract ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText);
+        protected abstract ActionEndStatus FunctionActionExecute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText);
+
+        public ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
+        {
+            if(isActive)
+            {
+                try
+                {
+                    FunctionActionExecute(_client, _message, _addingText);
+                }
+                catch (Exception e)
+                {
+                    _addingText?.Invoke("!!!UnknownFail!!!\n" + e.ToString());
+
+                    return ActionEndStatus.UnknownFail;
+                }
+            }
+
+            return ActionEndStatus.Success;
+        }
 
         public void SetActiveStatus(bool _isActive)
         {

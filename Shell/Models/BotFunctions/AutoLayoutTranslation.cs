@@ -1,31 +1,24 @@
-﻿using System.Text;
+﻿using System;
+using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace Shell.Models.BotFunctions
 {
-    [System.Obsolete]
+    [Obsolete]
     internal class AutoLayoutTranslation : BaseBotFunction
     {
         public override string Name => "автоматический перевод английской расскладки на русскую";
 
-        public override ActionEndStatus Execute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
+        protected override ActionEndStatus FunctionActionExecute(ITelegramBotClient _client, Message _message, MainWindowModel.ActionAddingText _addingText)
         {
-            if(isActive && IsNeedToTranslate(_message.Text))
+            if (IsNeedToTranslate(_message.Text))
             {
                 string translatedText = TranslateLayout(_message.Text);
 
-                try
-                {
-                    _client.SendTextMessageAsync(_message.Chat.Id, translatedText, ParseMode.Default, null, false, false, _message.MessageId);
+                _client.SendTextMessageAsync(_message.Chat.Id, translatedText, replyToMessageId: _message.MessageId);
 
-                    _addingText?.Invoke("Auto translator sended message: " + translatedText);
-                }
-                catch
-                {
-                    return ActionEndStatus.UnknownFail;
-                }
+                _addingText?.Invoke("Auto translator sended message: " + translatedText);
             }
 
             return ActionEndStatus.Success;
